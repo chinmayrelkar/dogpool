@@ -32,17 +32,17 @@ const (
 type Worker interface {
 	Run() error
 	Register(name string, executionFunc TaskExecutionFunc)
+	Exit()
 }
 
-func NewWorker(taskRunnerContext context.Context, db *gorm.DB) (Worker, chan struct{}) {
-	exitChannel := make(chan struct{})
+func NewWorker(taskRunnerContext context.Context, db *gorm.DB) Worker {
 	return &worker{
 		taskRunnerContext: taskRunnerContext,
 		dao:               dao.NewTaskDao(db),
 		db:                db,
 		logger:            NewLogger(),
-		exitChannel:       exitChannel,
-	}, exitChannel
+		exitChannel:       make(chan struct{}),
+	}
 }
 
 type worker struct {
@@ -66,6 +66,10 @@ func (w *worker) Run() error {
 			w.runSingleTask()
 		}
 	}
+}
+
+func (w *worker) Exit() {
+	w.exitChannel <- struct{}{}
 }
 
 func (w *worker) runSingleTask() {
