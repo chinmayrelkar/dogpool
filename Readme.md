@@ -1,6 +1,6 @@
 # Dogpool
 
-Dogpool is a Go package that provides a simple and efficient task scheduling and execution system using a MySQL database as a backend.
+Dogpool is a Go package that provides a simple and efficient task scheduling and execution system based on GORM.
 
 ## Features
 
@@ -13,11 +13,9 @@ Dogpool is a Go package that provides a simple and efficient task scheduling and
 ## Installation
 
 To use Dogpool in your Go project, run:
-
-
-
+```
 go get github.com/chinmayrelkar/dogpool
-
+```
 
 
 ## Usage
@@ -26,63 +24,65 @@ go get github.com/chinmayrelkar/dogpool
 
 Dogpool uses GORM with MySQL. Set up your database connection like this:
 
-
+```
 
 gormDb, err := gorm.Open(mysql.New(mysql.Config{
     DriverName: "mysql",
     DSN:        os.Getenv("MYSQL_DSN"),
 }), &gorm.Config{})
-
+```
 
 
 ### Creating a Worker
 
 
-
+```
 worker, exit := dogpool.NewWorker(context.TODO(), gormDb)
-
+```
 
 
 ### Scheduling Tasks
 
 To schedule a task, use the `ScheduleTask` method:
 
-
+```
 err := worker.ScheduleTask("task_name", []byte("task_data"), time.Now().Add(5*time.Minute))
-
+```
 
 ### Registering Task Handlers
 
 Register task handlers using the `RegisterTaskHandler` method:
 
-
+```
 worker.RegisterTaskHandler("task_name", func(ctx context.Context, taskData []byte) error {
     // Task execution logic here
     return nil
 })
-
+```
 
 ### Starting the Worker
 
 Start the worker to begin processing tasks:
 
 
+```
 go worker.Start()
-
+```
 
 ### Stopping the Worker
 
 To stop the worker gracefully:
 
 
-exit()
-
+```
+worker.Stop()
+```
 
 ## Example
 
 Here's a complete example of how to use Dogpool:
 
-
+```
 package main
 
 import (
@@ -130,7 +130,7 @@ func main() {
     // Stop the worker
     exit()
 }
-
+```
 
 ## Contributing
 
