@@ -39,7 +39,7 @@ func main() {
 	dbConfig.SetMaxOpenConns(100)
 	dbConfig.SetConnMaxLifetime(100)
 
-	worker, exit := dogpool.NewWorker(context.TODO(), gormDb)
+	worker := dogpool.NewWorker(context.TODO(), gormDb)
 	worker.Register("ExampleTask", Execute)
 	go worker.Run()
 
@@ -47,5 +47,5 @@ func main() {
 		"hello": "world",
 	})
 	time.Sleep(10 * 6 * time.Second)
-	exit <- struct{}{}
+	worker.Exit()
 }
