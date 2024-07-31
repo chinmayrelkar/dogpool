@@ -22,7 +22,7 @@ go get github.com/chinmayrelkar/dogpool
 
 ### Setting up the database
 
-Dogpool uses GORM with MySQL. Set up your database connection like this:
+Dogpool uses GORM. Set up your database connection like this:
 
 ```
 
